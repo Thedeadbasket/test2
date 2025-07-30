@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./vue-project
+    command: >
+      sh -c "npm install && npm run dev"
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./vue-project:/app
+      - node_modules:/app/node_modules
+    working_dir: /app
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./server
+    command: npm run dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/app
+
+    working_dir: /app
+    env_file:
+      - ./server/.env  # <== HIER: .env aus dem server-Ordner laden
+
+volumes:
+  node_modules:
